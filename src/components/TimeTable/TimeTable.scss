@@ -1,0 +1,43 @@
+.timeTable{
+	width: 714px;
+	@media screen and (max-width: 714px) {
+		width: 100%;
+	}
+	border-spacing: 0;
+	&__time{
+		display: inline;
+		color:silver;
+		position: relative;
+		top:-0.5rem;
+	}
+	//TODO theme
+	td{
+		border-style:solid;
+		border-color:silver;
+		border-width: 1px 1px 0 0;
+		padding:0;
+		width: 14.285%;
+		height: 100%;
+	}
+	tr{
+		height: 4rem;
+	}
+	th{
+		box-sizing:border-box;
+		width: 4rem;
+		min-width: 4rem;
+		vertical-align: top;
+	}
+	&--picked{
+		display: flex;
+		align-self: center;
+		width: 90%;
+		height: 90%;
+		margin: auto;
+		background-color: #b3b7ff;
+	}
+	&--appointment{
+		background-color: #ebecff;
+	}
+
+}
