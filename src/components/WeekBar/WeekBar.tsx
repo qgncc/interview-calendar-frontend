@@ -19,7 +19,6 @@ export function WeekBar({firstDayOfWeek}: WeekBarProps){
 
 	let days = [];
 	for(let day = new Date(firstDayOfWeek), i=0; i<7; i++,day.setDate(day.getDate()+1)){
-		let className = "week__day ";
 		let picked = ""
 		if(isToday(day)){
 			picked+="picked"

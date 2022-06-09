@@ -5,11 +5,12 @@ const theme = {
     text_color_main: "#000",
     text_color_button_main:"#ff3131", 
     background_main:"#fff",
+    background_td_appointment:"#ebecff",
     border_color_main:"#e6e6e6",
     control_background_main: "#f6f6f6",
     background_button_main: "#ff3131",
     background_popup_window_main:"#e6e6e7",
-    background_picked_main:"#ebecff",
+    background_picked_main:"#b3b7ff",
     border_popup_button:"#69697d",
     color_button_popup:"#007aff"
 }
@@ -20,6 +21,7 @@ export const HeaderStyled = styled.header`
     position: sticky;
     top:0;
     display: flex;
+    height: 7.11rem;
     flex-direction: row;
     justify-content: center;
     align-items: center;
@@ -65,7 +67,7 @@ export const ButtonStyled =  styled.button`
 `;
 export const WeekStyled = styled.div`
     width: 100%;
-    padding-top: 1rem;
+    padding-top: 0.8rem;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -88,20 +90,15 @@ export const WeekDayStyled = styled.div`
 export const WeekDayNumberStyled = styled.div`
     font-weight: 200;
     font-size: 1.8rem;
-    padding: 0.1rem 0.6rem;
+    padding: 0.6rem 0.6rem;
     box-sizing:content-box;
-    &__picked{
-        color: #fff;
-        border-radius:50%;
-        background-color: ${theme.background_button_main};
-    }
 `;
 export const ControlsStyled = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 0 1rem 4rem;
+    padding: 0.5rem 0 0.5rem 4rem;
     font-family: Nunito,sans-serif;
     font-size: 2rem;
 `;
@@ -110,9 +107,9 @@ export const ControlsCurrentStyled = styled.div`
 `;
 export const TableStyled = styled.table`
     margin-top: 1rem;
-    width: 714px;
-    @media screen and (max-width: 714px) {
-        width: 100%;
+    width: 100%;
+    @media screen and (min-width: 740px) {
+        width: 740px;
     }
     border-spacing: 0;
 `;
@@ -125,8 +122,15 @@ export const TableTimeStyled = styled.span`
 export const TableTdStyled = styled.td`
     border-style:solid;
     border-color:${theme.border_color_main};
-    border-width: 1px 1px 0 0;
-    padding:0;
+    background-clip: content-box;
+    background-color: ${(props:{hasAppointment:boolean, picked: boolean})=>{
+            if(props.picked) return theme.background_picked_main;
+            if(props.hasAppointment) return theme.background_td_appointment;
+        }
+    };
+    border-width: 2px 2px 0 0;
+    padding: 2px;
+    position:relative;
     width: 14.285%;
     height: 100%;
 `;
@@ -140,14 +144,6 @@ export const TableThStyled = styled.th`
     vertical-align: top;
 `;
 
-export const TimeTablePicked = styled.div`
-    display: flex;
-    align-self: center;
-    width: 90%;
-    height: 90%;
-    margin: auto;
-    background-color: ${theme.background_picked_main};
-`;
 export const FooterStyled = styled.footer`
     position:sticky;
     bottom:0;
@@ -179,6 +175,8 @@ export const PopupStyled = styled.div`
     width: 100vw;
     height: 100vh;
     top:0;
+    padding: 5%;
+    box-sizing: border-box;
     z-index: 100;
     display: flex;
     justify-content: center;
@@ -202,15 +200,15 @@ export const PopupInputStyled = styled.input`
     margin: 1.3rem 5% 0;
     border:1px solid ${theme.border_color_main};
     &:focus{
-        outline: none;
-        border:1px solid ${theme.border_color_main};
+        outline: #8e8e93 solid 1px;
     }
 `;
 export const PopupTitleStyled = styled.h1`
     margin: 0;
-    font-size: 1.3rem;
+    font-size: 1.8rem;
 `;
 export const PopupTextStyled = styled.div`
+    font-size: 1.5rem;
     text-align: center;
     margin-top: 0.5rem;
 `;

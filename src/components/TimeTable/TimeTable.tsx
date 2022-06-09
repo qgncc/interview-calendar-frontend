@@ -1,4 +1,10 @@
-import {TableStyled,TableTrStyled, TableThStyled, TableTimeStyled, TableTdStyled, TimeTablePicked} from "../styled";
+import {
+	TableStyled,
+	TableTrStyled, 
+	TableThStyled, 
+	TableTimeStyled, 
+	TableTdStyled, 
+} from "../styled";
 import {MouseEvent, Dispatch, SetStateAction} from "react";
 import {getDayAndHourFromId, hasAppointmentAt} from "../../utils";
 
@@ -25,11 +31,11 @@ export function TimeTable({appointments, picked, setPicked}: TimeTableProps){
 			let hasAppointment = hasAppointmentAt(...getDayAndHourFromId(curr), appointments); 
 			row.push(
 				<TableTdStyled id={curr} 
-							   key={i*10+j}>
-					{
-						curr === picked && 
-							<TimeTablePicked></TimeTablePicked>
-					}
+							   key={i*10+j}
+							   picked={curr===picked}
+							   hasAppointment={hasAppointment}
+							   >
+
 				</TableTdStyled>
 			);
 		}
