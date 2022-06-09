@@ -238,3 +238,21 @@ export const PoupButtonStyled = styled.button`
     line-height: 50%;
     cursor: pointer;
 `;
+export const StickedTopPanelStyled = styled.div`
+    background-color: #f6f6f6;
+    position:sticky;
+    display: flex;
+    justify-content: center;
+    align-items:center;
+    flex-direction: column;
+    width: 100%;
+    top:0;
+    z-index: 50;
+`;
+export const MainStyled = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+`;

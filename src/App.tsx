@@ -4,7 +4,7 @@ import {TimeTable} from "./components/TimeTable/TimeTable";
 import {WeekSwitcher} from "./components/WeekSwitcher/WeekSwitcher";
 import {Footer} from "./components/Footer/Footer";
 import {Popup} from "./components/Popup/Popup";
-import {} from "./components/styled";
+import {StickedTopPanelStyled, MainStyled} from "./components/styled";
 
 import {getDayAndHourFromId, hasAppointmentAt,send, dateToString} from "./utils";
 import {useState, useEffect} from "react";
@@ -86,16 +86,16 @@ function App() {
   }
 
   return (
-      <div className="main">
+      <MainStyled className="main">
         {isPopupOpen && <Popup close={closePopup}
                                add={addAppointment}/>}
-        <div className="stickedPanel">
+        <StickedTopPanelStyled>
           <Header openPopup={openPopup}/>
           <WeekSwitcher next={next}
                         prev={prev}
                         firstDayOfWeek={firstDayOfWeek}
           />
-        </div>
+        </StickedTopPanelStyled>
         <TimeTable appointments={appointments}
                    picked={picked}
                    setPicked={setPicked}
@@ -104,7 +104,7 @@ function App() {
                 remove={removeAppointment}
                 today={backToToday}
         />
-      </div>
+      </MainStyled>
   );
 }
 

@@ -13,60 +13,8 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-.icon{
-  font-weight: 400;
-  font-style: normal;
-  line-height: 1;
-  font-variant: normal;
-  display: inline-block;
-  &--small{
-    font-size: 2rem;
-  }
-  &--medium{
-    font-size: 3rem;
-  }
-  &--large{
-    font-size: 4rem;
-  }
-  &--plus{
-    &:before {
-      content: "+";
-    }
-  }
-}
-.button{
-  /*TODO theme*/
-  color: red;
-  background-color: transparent;
-  border: 0;
-  padding: 0.5rem;
-  line-height: 50%;
-  cursor: pointer;
-  font-size: inherit;
-}
 
-.main{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  width: 100%;
-  &__calendar{
-    margin-top: 1rem;
-  }
 
-}
-.stickedPanel{
-  background-color: #f6f6f6;
-  position:sticky;
-  display: flex;
-  justify-content: center;
-  align-items:center;
-  flex-direction: column;
-  width: 100%;
-  top:0;
-  z-index: 50;
-}
 .picked{
   color: #fff;
   border-radius:50%;
