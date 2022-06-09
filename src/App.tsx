@@ -1,62 +1,72 @@
 import React from 'react';
-import logo from './logo.svg';
 import {Header} from "./components/Header/Header";
 import {TimeTable} from "./components/TimeTable/TimeTable";
 import {WeekSwitcher} from "./components/WeekSwitcher/WeekSwitcher";
 import {Footer} from "./components/Footer/Footer";
 import {Popup} from "./components/Popup/Popup";
+import {} from "./components/styled";
 
-import {getDayAndHourFromId, send} from "./utils";
+import {getDayAndHourFromId, hasAppointmentAt,send, dateToString} from "./utils";
 import {useState, useEffect} from "react";
 
 
-let host= "http://localhost:8081/"
+const host= process.env.NODE_ENV==="development"?"http://localhost:8081/":"https://test-calendar-for-uchiru.herokuapp.com/";
 
 function App() {
-  let [current, setCurrent] = useState(new Date());
+  let date = new Date();
+  date.setDate(date.getDate()-date.getDay());
+  let [firstDayOfWeek, setFirstDayOfWeek] = useState(date);
   let [appointments, setAppointments] = useState([0,0,0,0,0,0,0]);
-  let [pickedHour, setPicked] = useState("");
+  let [picked, setPicked] = useState("");
   let [isPopupOpen, setIsPopupOpen] = useState(false);
 
-  async function fetchAppointments(date:string){
-    return send("get", host, date);
-    // return Promise.resolve([1+current.getDate(),2,3,4,5,6,7]);
+  async function fetchAppointments(date: string){
+    console.log("Fetching...", date);
+    send("get", host, {firstDayOfWeek:date})
+      .then((response)=> response.json()
+        .then((data)=>{
+          console.log(data);
+          setAppointments(data.appointments);
+        }
+        )
+      );
+  
   }
   //TODO custom hooks
   useEffect(()=>{
-    let date = ""+current.getFullYear()
-               +("0"+current.getMonth()).slice(-2)
-               +("0"+current.getDate()).slice(-2);
-    fetchAppointments(date).then((data)=>{
-      console.log(data);
-    }
-  );
-  },[current]);
+    let date = dateToString(firstDayOfWeek);
+    fetchAppointments(date);
+  },[firstDayOfWeek]);
 
   function next(){
-    let newDate = new Date(current);
-    newDate.setDate(current.getDate()+7);
-    setCurrent(newDate);
+    let newDate = new Date(firstDayOfWeek);
+    newDate.setDate(firstDayOfWeek.getDate()+7);
+    setFirstDayOfWeek(newDate);
     console.log(newDate);
   }
   function prev(){
-    let newDate = new Date(current);
-    newDate.setDate(current.getDate()-7);
-    setCurrent(newDate);
+    let newDate = new Date(firstDayOfWeek);
+    newDate.setDate(firstDayOfWeek.getDate()-7);
+    setFirstDayOfWeek(newDate);
     console.log(newDate);
   }
+  function addAppointment(date: string, time: string){
+    send("add", host, {date,time}).then(()=>fetchAppointments(dateToString(firstDayOfWeek)));
+  }
   function removeAppointment(){
-    let[day, hour] = getDayAndHourFromId(pickedHour);
-    let date = ""+current.getFullYear()
-               +("0"+current.getMonth()).slice(-2)
-               +("0"+current.getDate()).slice(-2);
+    let[dayStr, hourStr] = getDayAndHourFromId(picked);
+    let day = parseInt(dayStr);
+    let hour = parseInt(hourStr)
+    let dateObj = new Date(firstDayOfWeek);
+    dateObj.setDate(dateObj.getDate()+ day);
+    let date = dateToString(dateObj);
     let mask = 1<<hour;
     if(appointments[day]&mask){
       appointments[day]^=mask;
       
     }
-    send("delete", host, date, ("0"+hour).slice(-2));
     setPicked("");
+    send("delete", host, {date, time:hourStr}).then(()=>fetchAppointments(dateToString(firstDayOfWeek)));
   }
   function openPopup(){
     document.body.style.height="100vh"
@@ -68,12 +78,11 @@ function App() {
     document.body.style.overflow="";
     setIsPopupOpen(false);
   }
-  function addAppointment(date: string, hour: string){
-    send("add", host, date.replace("-",""), hour);
-  }
+
   function backToToday(){
     let date = new Date();
-    setCurrent(date);
+    date.setDate(date.getDate()-date.getDay());
+    setFirstDayOfWeek(date);
   }
 
   return (
@@ -84,15 +93,14 @@ function App() {
           <Header openPopup={openPopup}/>
           <WeekSwitcher next={next}
                         prev={prev}
-                        current={current}
+                        firstDayOfWeek={firstDayOfWeek}
           />
         </div>
-        <TimeTable className="main__calendar" 
-                   appointments={appointments}
-                   picked={pickedHour}
+        <TimeTable appointments={appointments}
+                   picked={picked}
                    setPicked={setPicked}
                    />
-        <Footer picked={pickedHour}
+        <Footer picked={!!picked && hasAppointmentAt(...getDayAndHourFromId(picked), appointments)}
                 remove={removeAppointment}
                 today={backToToday}
         />

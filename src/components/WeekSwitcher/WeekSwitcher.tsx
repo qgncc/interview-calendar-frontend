@@ -1,24 +1,24 @@
 import {Controls} from "../Controls/Controls";
 import {WeekBar} from "../WeekBar/WeekBar";
 import {MouseEvent} from "react";
-import "./WeekSwitcher.scss";
+import {SectionStyled} from "../styled";
 
 
 interface WeekSwitcherProps{
   next:(event: MouseEvent<HTMLButtonElement>)=>void,
   prev:(event: MouseEvent<HTMLButtonElement>)=>void,
-  current:Date,
+  firstDayOfWeek:Date,
   //TODO classNAme
 }
 
 
-export function WeekSwitcher({next,prev,current}:WeekSwitcherProps){
+export function WeekSwitcher({next,prev,firstDayOfWeek}:WeekSwitcherProps){
   return(
-        <section className="weekSwitcher">
-          <WeekBar curr_day={current}/>
+        <SectionStyled>
+          <WeekBar firstDayOfWeek={firstDayOfWeek}/>
           <Controls next={next}
                     prev={prev}
-                    curr={current.toLocaleDateString("en-US", {year:"numeric", month:"long"})}/>
-        </section>
+                    curr={firstDayOfWeek.toLocaleDateString("en-US", {year:"numeric", month:"long"})}/>
+        </SectionStyled>
   )
 }

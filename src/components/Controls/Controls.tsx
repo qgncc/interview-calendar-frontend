@@ -1,4 +1,4 @@
-import "./Controls.scss"
+import {ButtonStyled,ControlsStyled,ControlsCurrentStyled} from "../styled";
 import {MouseEvent} from "react";
 
 interface ControlsProps{
@@ -10,19 +10,17 @@ interface ControlsProps{
 
 export function Controls(props: ControlsProps){
 	return(
-		<div className="controls">
-			<button onClick={props.prev}
-					className="button controls__left">
+		<ControlsStyled className="controls">
+			<ButtonStyled onClick={props.prev} fontSize="2.5rem" width="14.285%">
 				&lt;
-			</button>
-			<div className="controls__current">
+			</ButtonStyled>
+			<ControlsCurrentStyled>
 				{props.curr}
-			</div>
-			<button className="button controls__right"
-					onClick={props.next}>
+			</ControlsCurrentStyled>
+			<ButtonStyled onClick={props.next} fontSize="2.5rem" width="14.285%">
 				&gt;
-			</button>
-		</div>
+			</ButtonStyled>
+		</ControlsStyled>
 	)
 
 }

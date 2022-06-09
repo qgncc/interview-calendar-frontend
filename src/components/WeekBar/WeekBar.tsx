@@ -1,13 +1,12 @@
-import "./WeekBar.scss"
-import {MouseEvent} from "react";
+import {WeekStyled, WeekDayStyled, WeekDayNumberStyled} from "../styled";
+
 
 
 interface WeekBarProps{
-	curr_day: Date;
-	//TODO classNAme
+	firstDayOfWeek: Date;
 }
 
-export function WeekBar({curr_day}: WeekBarProps){
+export function WeekBar({firstDayOfWeek}: WeekBarProps){
 	function isToday(date: Date) {
 		let today = new Date();
 
@@ -18,32 +17,30 @@ export function WeekBar({curr_day}: WeekBarProps){
 		);
 	}
 
-	let firstDayOfWeek = new Date(curr_day);
-	firstDayOfWeek.setDate(curr_day.getDate()-curr_day.getDay());
 	let days = [];
-	for(let day = firstDayOfWeek, i=0; i<7; i++,day.setDate(day.getDate()+1)){
+	for(let day = new Date(firstDayOfWeek), i=0; i<7; i++,day.setDate(day.getDate()+1)){
 		let className = "week__day ";
 		let picked = ""
 		if(isToday(day)){
-			picked+="week__dayNumber--picked"
+			picked+="picked"
 		}
 		const elem = (
 			//TODO senematic
-			<div key={day.getDate()} className={className}>
-				<div className="week__dayName">
+			<WeekDayStyled key={day.getDate()}>
+				<div>
 					{day.toLocaleDateString("en-US", { weekday: 'long' })[0]}
 				</div>
-				<div className={"week__dayNumber "+picked}>
+				<WeekDayNumberStyled className={picked}>
 					{day.getDate()}
-				</div>
-			</div>
+				</WeekDayNumberStyled>
+			</WeekDayStyled>
 		)
 		days.push(elem)
 	}
 	return(
-		<div className="week">
+		<WeekStyled>
 			{days}
-		</div>
+		</WeekStyled>
 	)
 
 }

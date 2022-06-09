@@ -1,40 +1,78 @@
-export function getDayAndHourFromId(id: string){
-	let day=parseInt(id[0]);
-	let hour=parseInt(id[1]+id[2]);
+interface AddOpts{
+	date?: string,
+	time?: string,
+}
+interface DeleteOpts{
+	date?: string,
+	time?: string	
+}
+interface GetOpts{
+	firstDayOfWeek?:string,
+}
+export const dateReg=/(\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01]))/;
+export const timeReg=/[0-1][0-9]|[2][0-3]/;
+// const timeReg=/[0-1][0-9]|[2][0-3](:[0-5][0-9](:[0-5][0-9])?)?/;
+export function hasAppointmentAt(dayStr:string, hourStr: string, appointments:number[]){
+		let day = parseInt(dayStr), hour = parseInt(hourStr);
+		let mask = 1<<hour;
+		return !!(appointments[day]&mask);
+}
+export function getDayAndHourFromId(id: string):[string,string]{
+	let day=id[0];
+	let hour=id[1]+id[2];
 	return [day,hour];
 }
-export async function send(type:"add"|"delete"|"get", host: string, date: string, hour?: string){
-	let dateReg=/[0-9]{4}[0-1][0-9][0-3][1-9]/;
-	let hourReg=/[0-1][0-9]|[2][0-3]/;
-	if(!date.match(dateReg)) throw new Error("Wrong date signature");
-	if( (type==="add" || type==="delete") && hour === undefined) throw new Error("Need to know hour to add/delete appointment to calendar");
-	if((type==="add" || type==="delete") && !hour!.match(hourReg)) throw new Error("Wrong hour signature");
+export function dateToString(date: Date){
+	let str = "" +date.getFullYear()+
+ 			  "-"+("0"+(1+date.getMonth())).slice(-2)+
+              "-"+("0"+date.getDate()).slice(-2);
+	return str;
+}
+export async function send(
+		type:"add"|"delete"|"get", 
+		host: string, 
+		reqData: AddOpts&DeleteOpts&GetOpts 
+	){
+	if(type==="get" && (
+		reqData.firstDayOfWeek === undefined
+		||!dateReg.test(reqData.firstDayOfWeek)
+		)
+	) throw new Error("Wrong date format. Date format: YYYY-MM-DD");
+
+	if((type==="add" || type==="delete") && (
+		reqData.date === undefined
+			||reqData.time === undefined
+			||!dateReg.test(reqData.date)
+			||!timeReg.test(reqData.time)
+			)
+	) throw new Error("Wrong date and/or time format. Date format: YYYY-MM-DD, Time format: HH:mm:ss");
 	
-	let method = type==="add"?"POST":
-				 type==="delete"?"DELETE":undefined;
-	let appointment = {
-				date: date,
-				hour: hour
+	const methods={
+		add:"POST",
+		delete:"DELETE",
+		get:"GET"
 	}
-	let opts: RequestInit = {
-		method: method,
-		// mode: 'cors',
-		// Access_Control_Allow_Origin: "*",
-		// cache: 'no-cache',
-		// credentials: 'same-origin',
-		headers: {
-			'Content-Type': 'application/json'
-			},
-		// referrerPolicy: 'no-referrer', 
-		body: JSON.stringify(appointment)
-	}
+
+	
 
 
 	switch(type){
 		case "add":
 		case "delete":
-			return fetch(host+"api/appointments/", opts);
+			let appointment = {
+				date: reqData.date,
+				time: reqData.time
+			};
+			let reqOptions: RequestInit = {
+				method: methods[type],
+				headers: {
+					'Content-Type': 'application/json'
+					},
+				body: JSON.stringify(appointment)
+			}
+			return fetch(host+"api/appointments/", reqOptions);
 		case "get":
-			return fetch(host+"api/appointments/"+date);
+			return fetch(host+"api/appointments/"+reqData.firstDayOfWeek);
 	}
+
 }

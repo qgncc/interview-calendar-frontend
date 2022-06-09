@@ -1,18 +1,24 @@
-import "./Header.scss"
+import {} from "../styled";
 import {ReactComponent as PlusIcon} from "../../img/icons/plus-icon.svg";
+import {HeaderStyled, ButtonStyled, WrapperStyled, TitleStyled} from "../styled";
+
 interface HeaderProps{
     openPopup:()=>void,
 }
 
+
 export function Header({openPopup}:HeaderProps) {
+    
+
+
     return(
-        <header className="header">
-            <div className="header__wrapper">
-                <div className="header__title">Interview Calendar</div>
-                <button onClick={openPopup} className="button"><PlusIcon/></button>
-            </div>    
+        <HeaderStyled>
+            <WrapperStyled>
+                <TitleStyled>Interview Calendar</TitleStyled>
+                <ButtonStyled onClick={openPopup}><PlusIcon/></ButtonStyled>
+            </WrapperStyled>    
             
-        </header>
+        </HeaderStyled>
 
     )
 }

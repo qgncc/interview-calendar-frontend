@@ -1,8 +1,10 @@
-import './Footer.scss';
+import {FooterStyled, ButtonStyled, FooterWrapperStyled} from "../styled";
+
 import {MouseEvent} from "react";
 
+
 interface FooterProps{
-	picked: string
+	picked: boolean,
 	remove:()=>void
 	today:()=>void
 }
@@ -15,11 +17,11 @@ export function Footer(props:FooterProps){
 		props.remove();
 	}
 	return(
-		<footer className="footer">
-			<div className="footer__wrapper">
-				<button onClick={handleToday} className="button">Today</button>
-				{!!props.picked && <button onClick={handleRemove} className="button">Delete</button>}
-			</div>
-		</footer>	
+		<FooterStyled>
+			<FooterWrapperStyled className="footer__wrapper">
+				<ButtonStyled onClick={handleToday}>Today</ButtonStyled>
+				{props.picked && <ButtonStyled onClick={handleRemove}>Delete</ButtonStyled>}
+			</FooterWrapperStyled>
+		</FooterStyled>	
 	)
 }

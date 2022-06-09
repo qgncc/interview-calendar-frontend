@@ -1,5 +1,14 @@
-import "./Popup.scss";
-import {MouseEvent, KeyboardEvent, useState, useEffect, useRef} from "react";
+import {
+	PopupStyled, 
+	PopupTitleStyled, 
+	PopupTextStyled, 
+	PopupFormStyled, 
+	PopupInputStyled,
+	PoupButtonStyled,
+	PopupWindowStyled,
+	PopupStyledError
+} from "../styled";
+import {MouseEvent, useState, useRef} from "react";
 
 
 interface PopupProps{
@@ -14,11 +23,12 @@ export function Popup({add, close}: PopupProps){
 	function handleOk(event: MouseEvent<HTMLButtonElement>){
 		event.preventDefault();
 		let date = ref.current!.value
-		let match = date.match(/([0-9]{4}-[0-1][0-9]-[0-3][1-9]) ([0-1][0-9]|[2][0-3])(:[0-5][0-9]:[0-5][0-9])?/);
+		let match = date.match(
+			/(\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])) ([0-1][0-9]|[2][0-3])(:[0-5][0-9]:[0-5][0-9])?/);
 		if(match){
-			console.log(match);
+			console.log(match)
 			if(isError) setIsError(false);
-			add(match[1].replace('-',""), match[2]);
+			add(match[1], match[2]);
 			close();
 		}else{
 			setIsError(true);
@@ -31,30 +41,28 @@ export function Popup({add, close}: PopupProps){
 	let style = {transform:`translateY(${window.pageYOffset}px)`};
 	
 	return(
-		<div style={style} className="popup">
-			<div className="popup__window">
-				<h1 className="popup__title">
+		<PopupStyled style={style}>
+			<PopupWindowStyled>
+				<PopupTitleStyled>
 					https://calendar.com
-				</h1>
-				<div className="popup__text">
+				</PopupTitleStyled>
+				<PopupTextStyled>
 					Enter event time:<br/>
 					YYYY-MM-DD HH:mm:ss
-				</div>
-				<form action="" className="popup__form">
-					<input ref={ref} type="text" className="popup__input"/>
-					{isError && <span className="popup__error">wrong date format</span>}
+				</PopupTextStyled>
+				<PopupFormStyled>
+					<PopupInputStyled ref={ref} type="text"/>
+					{isError && <PopupStyledError>wrong date format</PopupStyledError>}
 
 				
-					<button onClick={handleCancel} 
-							className="button popup__button">
+					<PoupButtonStyled onClick={handleCancel}> 
 						Cancel
-					</button>
-					<button onClick={handleOk}
-							className="button popup__button">
+					</PoupButtonStyled>
+					<PoupButtonStyled onClick={handleOk}>
 						Ok
-					</button>
-				</form>
-			</div>
-		</div>
+					</PoupButtonStyled>
+				</PopupFormStyled>
+			</PopupWindowStyled>
+		</PopupStyled>
 	)
 }

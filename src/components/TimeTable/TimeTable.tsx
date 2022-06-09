@@ -1,49 +1,39 @@
-import "./TimeTable.scss"
-import {MouseEvent, useState, Dispatch, SetStateAction} from "react";
-import {getDayAndHourFromId} from "../../utils";
+import {TableStyled,TableTrStyled, TableThStyled, TableTimeStyled, TableTdStyled, TimeTablePicked} from "../styled";
+import {MouseEvent, Dispatch, SetStateAction} from "react";
+import {getDayAndHourFromId, hasAppointmentAt} from "../../utils";
 
 
 interface TimeTableProps{
 	appointments:number[],
-	className?: string,
 	picked: string;
 	setPicked: Dispatch<SetStateAction<string>>;
 }
 
-export function TimeTable({appointments,className, picked, setPicked}: TimeTableProps){
+export function TimeTable({appointments, picked, setPicked}: TimeTableProps){
 	const table = [];
-	className=className===undefined?"":className;
-	function hasAppointmentsAt(hourAndDay:string){
-		let  [day,hour] = getDayAndHourFromId(hourAndDay);
-		let mask = 1<<hour;
-		return !!(appointments[day]&mask);
-
-	}
 
 	for(let i = 0; i<24; i++){
 		let row = [
-			<th key={i-1} scope="row">
-				<span className="timeTable__time">
+			<TableThStyled key={i-1} scope="row">
+				<TableTimeStyled>
 					{('0' + i).slice(-2)+":00"}
-				</span>
-			</th>
+				</TableTimeStyled>
+			</TableThStyled>
 		];
 		for(let j = 0; j<7; j++){
 			let curr = j+(("0"+i).slice(-2))
-			let hasAppointment = hasAppointmentsAt(curr); 
-			let className=hasAppointment?"timeTable--appointment":""
+			let hasAppointment = hasAppointmentAt(...getDayAndHourFromId(curr), appointments); 
 			row.push(
-				<td className={className}
-					id={curr} 
-					key={i*10+j}>
+				<TableTdStyled id={curr} 
+							   key={i*10+j}>
 					{
 						curr === picked && 
-							<div className="timeTable--picked"></div>
+							<TimeTablePicked></TimeTablePicked>
 					}
-				</td>
+				</TableTdStyled>
 			);
 		}
-		table.push(<tr key={i}>{row}</tr>)
+		table.push(<TableTrStyled key={i}>{row}</TableTrStyled>)
 	}
 	function handleClick(event: MouseEvent<HTMLTableElement>){
 		let target = event.target as HTMLElement;
@@ -54,11 +44,11 @@ export function TimeTable({appointments,className, picked, setPicked}: TimeTable
 	}
 
 	return(
-		<table onClick={handleClick} className={"timeTable "+className}>
+		<TableStyled onClick={handleClick}>
 			<tbody>
 				{table}
 			</tbody>
-		</table>
+		</TableStyled>
 	)
 
 }
