@@ -26,7 +26,6 @@ export function Popup({add, close}: PopupProps){
 		let match = date.match(
 			/(\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])) ([0-1][0-9]|[2][0-3])(:[0-5][0-9]:[0-5][0-9])?/);
 		if(match){
-			console.log(match)
 			if(isError) setIsError(false);
 			add(match[1], match[2]);
 			close();

@@ -21,18 +21,15 @@ function App() {
   let [isPopupOpen, setIsPopupOpen] = useState(false);
 
   async function fetchAppointments(date: string){
-    console.log("Fetching...", date);
     send("get", host, {firstDayOfWeek:date})
       .then((response)=> response.json()
         .then((data)=>{
-          console.log(data);
           setAppointments(data.appointments);
         }
         )
       );
   
   }
-  //TODO custom hooks
   useEffect(()=>{
     let date = dateToString(firstDayOfWeek);
     fetchAppointments(date);
@@ -42,13 +39,11 @@ function App() {
     let newDate = new Date(firstDayOfWeek);
     newDate.setDate(firstDayOfWeek.getDate()+7);
     setFirstDayOfWeek(newDate);
-    console.log(newDate);
   }
   function prev(){
     let newDate = new Date(firstDayOfWeek);
     newDate.setDate(firstDayOfWeek.getDate()-7);
     setFirstDayOfWeek(newDate);
-    console.log(newDate);
   }
   function addAppointment(date: string, time: string){
     send("add", host, {date,time}).then(()=>fetchAppointments(dateToString(firstDayOfWeek)));
